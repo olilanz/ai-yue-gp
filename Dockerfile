@@ -19,13 +19,15 @@ RUN apt update && apt install -y \
 # Create application directory
 WORKDIR /app
 
-# Install Git Large File Storage and pull the project assets
-RUN git lfs install && \
-    git clone --depth 1 https://github.com/deepbeepmeep/YuEGP/ /app/YuEGP && \
-    git clone --depth 1 https://huggingface.co/m-a-p/xcodec_mini_infer /app/YuEGP/inference/xcodec_mini_infer
-
 # Install PyTorch (stable version for CUDA 12.4)
 RUN pip install torch==2.5.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+
+# Install Git Large File Storage and pull the project assets
+RUN git lfs install && \
+#    git clone --depth 1 https://github.com/deepbeepmeep/YuEGP/ /app/YuEGP && \
+    git clone --depth 1 https://github.com/olilanz/deepbeepmeep-YuEGP /app/YuEGP && \
+    git clone --depth 1 https://huggingface.co/m-a-p/xcodec_mini_infer /app/YuEGP/inference/xcodec_mini_infer \
+    && echo ..
 
 # Install YuEGP dependencies
 RUN pip install --no-cache-dir -r /app/YuEGP/requirements.txt

@@ -21,8 +21,17 @@ rsync -a ./YuEGP/inference/* ${INFERENCE_HOME}/
 cd ${INFERENCE_HOME}
 echo "✅ Cache is ready."
 
-echo "🚀 Building the environment and starting the YuEGP service..."
-python3 gradio_server.py --profile 3 --compile
+echo "🚀 Initializing the environment and starting the YuEGP service..."
+python3 gradio_server.py --profile 3 --compile \
+    --cuda_idx 0 \
+    --stage1_model m-a-p/YuE-s1-7B-anneal-en-cot \
+    --stage2_model m-a-p/YuE-s2-1B-general \
+    --genre_txt /data/input/genre.txt \
+    --lyrics_txt /data/input/lyrics.txt \
+    --run_n_segments 4 \
+    --stage2_batch_size 4 \
+    --output_dir /data/output \
+    --max_new_tokens 3000 
 echo "❌ The YuEGP service has terminated."
 
 #python3 infer.py \
