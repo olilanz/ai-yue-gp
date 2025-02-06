@@ -12,38 +12,29 @@ ENV LD_LIBRARY_PATH="$CUDA_HOME/lib64:$LD_LIBRARY_PATH"
 
 # Install system dependencies in a single step to reduce layer size
 RUN apt update && apt install -y \
-    git git-lfs rsync \
+    git git-lfs \
     python3 python3-pip && \
+    python3 -m pip install --upgrade pip && \
+    git lfs install && \
     rm -rf /var/lib/apt/lists/*
 
-# Create application directory
+# Set working directory
 WORKDIR /app
 
-# Install PyTorch (stable version for CUDA 12.4)
-RUN pip install torch==2.5.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
-
-# Install Git Large File Storage and pull the project assets
-RUN git lfs install && \
-#    git clone --depth 1 https://github.com/deepbeepmeep/YuEGP/ /app/YuEGP && \
-    git clone --depth 1 https://github.com/olilanz/deepbeepmeep-YuEGP /app/YuEGP && \
-    git clone --depth 1 https://huggingface.co/m-a-p/xcodec_mini_infer /app/YuEGP/inference/xcodec_mini_infer \
-    && echo ..
-
-# Install YuEGP dependencies
-RUN pip install --no-cache-dir -r /app/YuEGP/requirements.txt
-
-# Install FlashAttention without isolated build
-RUN pip install --no-cache-dir flash-attn --no-build-isolation
-
-# Return to app directory
-WORKDIR /app
+# Install PyTorch 2.5.1 (it's not released yet, so we need to use the test wheel)
+RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/test/cu124 torch==2.5.1 torchvision torchaudio
+# RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
 
 # Copy startup script and make it executable
 COPY startup.sh startup.sh
-RUN chmod +x startup.sh
 
 # Expose the required port (make sure it's used in the startup script)
 EXPOSE 7860
 
+# Parameters for the startup script
+ENV YUEGP_PROFILE=1
+ENV YUEGP_CUDA_IDX=0
+ENV YUEGP_ICL_MODE=0
+
 # Default command to run the container
-CMD ["./startup.sh"]
+CMD ["bash", "./startup.sh"]
