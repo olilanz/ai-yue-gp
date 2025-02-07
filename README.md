@@ -1,4 +1,5 @@
-# ai-YuE
+# YuE AI Song Composer for the GPU Poor (YuEGP)
+
 Containerised version of YuE music generator
 
 # commands
