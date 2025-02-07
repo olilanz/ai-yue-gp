@@ -21,3 +21,8 @@ docker run --gpus all -it \
   -p 8888:8888 \
   -e DOWNLOAD_MODELS=YuE-s2-1B-general,YuE-s1-7B-anneal-en-cot \
   alissonpereiraanjos/yue-interface:latest
+
+# runpod.io
+
+apt update
+apt install git git-lfs

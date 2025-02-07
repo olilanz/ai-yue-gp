@@ -73,12 +73,9 @@ YUEGP_ICL_MODE=${YUEGP_ICL_MODE:-0}
 
 YUEGP_ARGS=" \
     --profile ${YUEGP_PROFILE} \
-    --compile \
     --cuda_idx ${YUEGP_CUDA_IDX} \
     --genre_txt /data/input/genre.txt \
     --lyrics_txt /data/input/lyrics.txt \
-    --run_n_segments 4 \
-    --stage2_batch_size 4 \
     --output_dir /data/output"
 
 if [[ "$YUEGP_ICL_MODE" == "1" ]]; then
