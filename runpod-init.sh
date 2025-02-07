@@ -10,4 +10,8 @@ export YUEGP_PROFILE=1
 export YUEGP_CUDA_IDX=0
 export YUEGP_ICL_MODE=1
 
+mkdir -p /data/cache
+mkdir -p /workspace/cache
+ln -sf /workspace/cache /data/cache
+
 ./startup.sh
