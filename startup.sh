@@ -47,10 +47,24 @@ INFERENCE_HOME="${YUEGP_HOME}/inference"
 ln -sfn "${XCODEC_HOME}" "${INFERENCE_HOME}/xcodec_mini_infer"
 
 # Install dependencies
+VENV_HOME="${CACHE_HOME}/venv"
 echo "📦 Installing dependencies..."
-#pip install --no-cache-dir -r "$YUEGP_HOME/requirements.txt"
+if [ ! -d "$VENV_HOME" ]; then
+    python3 -m venv "$VENV_HOME"
+fi
+
+source "${VENV_HOME}/bin/activate"
+pip install --no-cache-dir --upgrade pip
+pip install torch==2.5.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/test/cu124
 pip install --no-cache-dir --root-user-action=ignore -r "$YUEGP_HOME/requirements.txt"
-pip install --no-cache-dir --root-user-action=ignore flash-attn --no-build-isolation 
+pip install --no-cache-dir wheel
+pip install --no-cache-dir --root-user-action=ignore flash-attn --no-build-isolation
+
+# Applying transformer patch as per YuEGP documentation
+echo "🔨 Applying transformer patch..."
+ln -sfn "${VENV_HOME}" "${YUEGP_HOME}/venv"
+cd "$YUEGP_HOME" || exit 1
+source patchtransformers.sh
 
 # Set up arguments
 YUEGP_PROFILE=${YUEGP_PROFILE:-1}
