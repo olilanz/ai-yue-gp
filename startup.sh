@@ -16,7 +16,7 @@ mkdir -p "${CACHE_HOME}" "${HF_HOME}" "${TORCH_HOME}" /data/input /data/output
 
 # Clone or update YuEGP
 YUEGP_HOME="${CACHE_HOME}/YuEGP"
-YUEGP_REPO_URL="https://github.com/olilanz/deepbeepmeep-YuEGP.git"
+YUEGP_REPO_URL="https://github.com/deepbeepmeep/YuEGP.git"
 
 if [ ! -d "$YUEGP_HOME" ]; then
     echo "📥 Cloning YuEGP repository..."
@@ -60,17 +60,22 @@ pip install --no-cache-dir --root-user-action=ignore -r "$YUEGP_HOME/requirement
 pip install --no-cache-dir wheel
 pip install --no-cache-dir --root-user-action=ignore flash-attn --no-build-isolation
 
-# Applying transformer patch as per YuEGP documentation
-echo "🔨 Applying transformer patch..."
-ln -sfn "${VENV_HOME}" "${YUEGP_HOME}/venv"
-cd "$YUEGP_HOME" || exit 1
-source patchtransformers.sh
-
 # Set up arguments
 YUEGP_PROFILE=${YUEGP_PROFILE:-1}
 YUEGP_CUDA_IDX=${YUEGP_CUDA_IDX:-0}
 YUEGP_ICL_MODE=${YUEGP_ICL_MODE:-0}
+YUEGP_TRANSFORMER_PATCH=${YUEGP_TRANSFORMER_PATCH:-0}
 
+# Applying transformer patch as per YuEGP documentation
+if [[ "$YUEGP_TRANSFORMER_PATCH" == "1" ]]; then
+    echo "🔨 Applying transformer patch..."
+    ln -sfn "${VENV_HOME}" "${YUEGP_HOME}/venv"
+    cd "$YUEGP_HOME" || exit 1
+    source patchtransformers.sh
+fi
+
+# Build command line argds and start the service
+echo "🚀 Starting YuEGP service..."
 YUEGP_ARGS=" \
     --profile ${YUEGP_PROFILE} \
     --cuda_idx ${YUEGP_CUDA_IDX} \
@@ -87,7 +92,6 @@ elif [[ "$YUEGP_ICL_MODE" != "0" ]]; then
     exit 1
 fi
 
-echo "🚀 Starting YuEGP service..."
 cd "$INFERENCE_HOME" || exit 1
 python3 gradio_server.py ${YUEGP_ARGS}
 echo "❌ The YuEGP service has terminated."

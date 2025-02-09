@@ -1,16 +1,79 @@
 # YuE AI Song Composer for the GPU Poor (YuEGP)
 
-Containerised version of YuE music generator
+Containerised version of the YuEGP music generator. It is based on the YuE project, with deepmeepbeep's optimizations for the GPU-poor. It lets you run a quantized version of the full model on your smaller GPU, e.g. with 12GM of VRAM or even less.
 
-# commands
+Currently, only NVIDIA CPU's are supported, as the code releis on CUDA for the processing. 
+
+The container is contains all dependencies, i.e. batteries included. Though, during start-up it will acquire the latest model from deepmeepbeep ("https://github.com/deepbeepmeep/YuEGP.git") and the latest mini-inference model from Huggingface ("https://huggingface.co/m-a-p/xcodec_mini_infer.git"). 
+
+## Disk size and startup time
+
+The container consumes considerable disk space for storage of the AI models. On my setup I observe 7GB for the docker image itsef, plus 27GB for cached data. Building the cache will happen the first time when you start the container. After that any restart should be faster.
+
+It may be advisable to store the cache outside of the conatiner, e.g. by mounting a volume to /data
+
+## Variables
+
+YUEGP_PROFILE: Dependent on your evailable hardware, i.e. VRAM
+ - 1: Fastest model, but requires 16GB or more (default)
+ - 2: Undefined/undocumented
+ - 3: Slower, up to 12GB VRAM
+ - 4: Slowest, but works with less than 10GB
+
+YUEGP_CUDA_IDX: Index of the GPU being used for the inference (default: 0)
+
+YUEGP_ICL_MODE: Input prompt mode.
+ - 0: Provide input prompt in text form, i.e. describe the style using keywords.
+ - 1: Allows you to send a sound clip as reference for the style.
+ - 2: Allows you to send 2 sound clips as reference for the style - one for vocals, and one for instruments.
+
+YUEGP_TRANSFORMER_PATCH: Patch the transformers for additional speed on lower VRAM configurations.
+ - 0: Run with the original transformers, without deepmeepbeep's optimizations (default)
+ - 1: Apply the patches - may give unintended side effects in certain configurations.
+
+### Fixing caching issues
+
+As the container updates the models to the latest available version, there is no guarantee that the cached files from previous start-ups are compatible with updated versions. I haven't encountered any issue yet. Though, should you run into issues, just removing the cache folder will caus the startup script to rebuild it from scratch, and thereby fix issues caused by version specific incompatibilities.
+
+## Command reference
+
+### Build the container
+
+Building the container is straight forward. It will build the container, based on NVIDIA's CUDA development container, and add required Python dependencies for bootstrapping YuEGP. 
+
+```bash
 docker build -t olilanz/ai-yue-gp .
-docker run -it --rm --name ai-yue-gp --shm-size 24g --gpus all -p 7860:7860  -e YUEGP_PROFILE=3 -e YUEGP_ICL_MODE=1 --network host -v /mnt/cache/appdata/ai-yue-gp:/data olilanz/ai-yue-gp
+```
 
-# Resources
+### Running the container
+
+On my setup I am using the following command line: 
+
+```bash
+docker run -it --rm --name ai-yue-gp \
+  --shm-size 24g --gpus all \
+  -p 7860:7860 \
+  -v /mnt/cache/appdata/ai-yue-gp:/data \
+  -e YUEGP_PROFILE=3 \
+  -e YUEGP_ICL_MODE=1 \
+  -e YUEGP_TRANSFORMER_PATCH=1 \
+  --network host \
+  olilanz/ai-yue-gp
+```
+Note that you need to have an NVIDIA GPU installed, including all dependencies for Docker.
+
+### Environment reference
+
+I am running on a computer with an AMD Ryzen 7 3700X, 128GB Ram, an RTX 3060 with 12GB VRAM. CPU and Ram are plentiful. The GPU is the bottleneck. It runs stable in that configuration. Though, for a song with 6 sections, the inference takes about 90 minutes to complete.
+
+## Resources
 * For the GPU-Poor: https://github.com/deepbeepmeep/YuEGP
 
-# Alternative
+## Alternative
 
+If you have plenty of VRAM, there is another container available, which runs the full model, i.e. without deepmeepbeep's optimizations.
+
+```bash
 docker run --gpus all -it \
   --name YuE \
   --rm \
@@ -22,8 +85,6 @@ docker run --gpus all -it \
   -p 8888:8888 \
   -e DOWNLOAD_MODELS=YuE-s2-1B-general,YuE-s1-7B-anneal-en-cot \
   alissonpereiraanjos/yue-interface:latest
+```
 
-# runpod.io
-
-apt update
-apt install git git-lfs
+This hasn't worked on my hardware though. It is just for reference.
