@@ -16,7 +16,8 @@ mkdir -p "${CACHE_HOME}" "${HF_HOME}" "${TORCH_HOME}" /data/output
 
 # Clone or update YuEGP
 YUEGP_HOME="${CACHE_HOME}/YuEGP"
-YUEGP_REPO_URL="https://github.com/deepbeepmeep/YuEGP.git"
+#YUEGP_REPO_URL="https://github.com/deepbeepmeep/YuEGP.git"
+YUEGP_REPO_URL="https://github.com/olilanz/deepbeepmeep-YuEGP.git"
 
 if [ ! -d "$YUEGP_HOME" ]; then
     echo "📥 Cloning YuEGP repository..."
@@ -65,7 +66,6 @@ YUEGP_PROFILE=${YUEGP_PROFILE:-1}
 YUEGP_CUDA_IDX=${YUEGP_CUDA_IDX:-0}
 YUEGP_ENABLE_ICL=${YUEGP_ENABLE_ICL:-1}
 YUEGP_TRANSFORMER_PATCH=${YUEGP_TRANSFORMER_PATCH:-0}
-YUEGP_STAGE_2_BATCH_SIZE=${YUEGP_STAGE_2_BATCH_SIZE:-2}
 
 # Applying transformer patch as per YuEGP documentation
 if [[ "$YUEGP_TRANSFORMER_PATCH" == "1" ]]; then
@@ -80,7 +80,6 @@ echo "🚀 Starting YuEGP service..."
 YUEGP_ARGS=" \
     --profile ${YUEGP_PROFILE} \
     --cuda_idx ${YUEGP_CUDA_IDX} \
-    --stage2_batch_size ${YUEGP_STAGE_2_BATCH_SIZE} \
     --output_dir /data/output \
     --keep_intermediate"
 

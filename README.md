@@ -30,8 +30,6 @@ YUEGP_TRANSFORMER_PATCH: Patch the transformers for additional speed on lower VR
  - 0: Run with the original transformers, without deepmeepbeep's optimizations.
  - 1: Apply the patches - may give unintended side effects in certain configurations.
 
-YUEGP_RUN_N_SEGMENTS: Number of segments to run simultaneously in stage 2 (default: 2). Increase may improve music coherence, at teh expense of more VRAM.
-
 More documentation on the effect of these parameters can be found in the [originator's repo](https://github.com/deepbeepmeep/YuEGP.git).
 
 ### Fixing caching issues
