@@ -81,8 +81,8 @@ YUEGP_ARGS=" \
     --profile ${YUEGP_PROFILE} \
     --cuda_idx ${YUEGP_CUDA_IDX} \
     --stage2_batch_size ${YUEGP_STAGE_2_BATCH_SIZE} \
-    --output_dir /data/output" \
-    --keep_intermediate
+    --output_dir /data/output \
+    --keep_intermediate"
 
 if [[ "$YUEGP_ENABLE_ICL" == "1" ]]; then
     echo "🔨 Enabling audio prompt..."

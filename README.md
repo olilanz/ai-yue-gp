@@ -50,7 +50,7 @@ docker build -t olilanz/ai-yue-gp .
 
 ### Running the container
 
-On my setup I am using the following command line: 
+On my setup I am using the following parameters: 
 
 ```bash
 docker run -it --rm --name ai-yue-gp \
@@ -67,14 +67,16 @@ Note that you need to have an NVIDIA GPU installed, including all dependencies f
 
 ### Environment reference
 
-I am running on a computer with an AMD Ryzen 7 3700X, 128GB Ram, an RTX 3060 with 12GB VRAM. CPU and Ram are plentiful. The GPU is the bottleneck. It runs stable in that configuration. Though, for a song with 6 sections, the inference takes about 90 minutes to complete.
+I am running on a computer with an AMD Ryzen 7 3700X, 128GB Ram, an RTX 3060 with 12GB VRAM. CPU and Ram are plentiful. The GPU is the bottleneck. It runs stable in that configuration. Though, for a song with 6 sections, the inference takes about 90 minutes to complete - resulting in a song of over 2 mins length.
+
+Deepmeepbeep mentions in his documentation that with an RTX4090, he can generate a similar song using profile 1 in just about 4 minutes. So, a good GPU works wonders :-D
 
 ## Resources
 * For the GPU-Poor: https://github.com/deepbeepmeep/YuEGP
 
 ## Alternative
 
-If you have plenty of VRAM, there is another container available, which runs the full model, i.e. without deepmeepbeep's optimizations.
+If you have plenty of VRAM, there is another container available, which runs the full model, i.e. without deepmeepbeep's optimizations. You may want to check this out.
 
 ```bash
 docker run --gpus all -it \
