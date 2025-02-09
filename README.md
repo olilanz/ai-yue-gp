@@ -4,32 +4,35 @@ Containerised version of the YuEGP music generator. It is based on the YuE proje
 
 Currently, only NVIDIA CPU's are supported, as the code releis on CUDA for the processing. 
 
-The container is contains all dependencies, i.e. batteries included. Though, during start-up it will acquire the latest model from deepmeepbeep ("https://github.com/deepbeepmeep/YuEGP.git") and the latest mini-inference model from Huggingface ("https://huggingface.co/m-a-p/xcodec_mini_infer.git"). 
+The container is contains all dependencies, i.e. batteries included. Though, during start-up it will acquire the latest model and code from [deepmeepbeep's repo](https://github.com/deepbeepmeep/YuEGP.git) and the latest mini-inference model from [Huggingface](https://huggingface.co/m-a-p/xcodec_mini_infer.git). 
 
 ## Disk size and startup time
 
 The container consumes considerable disk space for storage of the AI models. On my setup I observe 7GB for the docker image itsef, plus 27GB for cached data. Building the cache will happen the first time when you start the container. After that any restart should be faster.
 
-It may be advisable to store the cache outside of the conatiner, e.g. by mounting a volume to /data
+It may be advisable to store the cache outside of the conatiner, e.g. by mounting a volume to /data.
 
 ## Variables
 
-YUEGP_PROFILE: Dependent on your evailable hardware, i.e. VRAM
- - 1: Fastest model, but requires 16GB or more (default)
- - 2: Undefined/undocumented
- - 3: Slower, up to 12GB VRAM
- - 4: Slowest, but works with less than 10GB
+YUEGP_PROFILE: Dependent on your evailable hardware, i.e. VRAM (default: 1).
+ - 1: Fastest model, but requires 16GB or more.
+ - 2: Undefined/undocumented.
+ - 3: Slower, up to 12GB VRAM.
+ - 4: Slowest, but works with less than 10GB.
 
-YUEGP_CUDA_IDX: Index of the GPU being used for the inference (default: 0)
+YUEGP_CUDA_IDX: Index of the GPU being used for the inference (default: 0).
 
-YUEGP_ICL_MODE: Input prompt mode.
+YUEGP_ENABLE_ICL: Enable audio input prompt (defailt: 1).
  - 0: Provide input prompt in text form, i.e. describe the style using keywords.
- - 1: Allows you to send a sound clip as reference for the style.
- - 2: Allows you to send 2 sound clips as reference for the style - one for vocals, and one for instruments.
+ - 1: Allows you to send one or 2 audio clips as reference for the style.
 
-YUEGP_TRANSFORMER_PATCH: Patch the transformers for additional speed on lower VRAM configurations.
- - 0: Run with the original transformers, without deepmeepbeep's optimizations (default)
+YUEGP_TRANSFORMER_PATCH: Patch the transformers for additional speed on lower VRAM configurations (default: 0).
+ - 0: Run with the original transformers, without deepmeepbeep's optimizations.
  - 1: Apply the patches - may give unintended side effects in certain configurations.
+
+YUEGP_RUN_N_SEGMENTS: Number of segments to run simultaneously in stage 2 (default: 2). Increase may improve music coherence, at teh expense of more VRAM.
+
+More documentation on the effect of these parameters can be found in the [originator's repo](https://github.com/deepbeepmeep/YuEGP.git).
 
 ### Fixing caching issues
 
@@ -56,7 +59,7 @@ docker run -it --rm --name ai-yue-gp \
   -v /mnt/cache/appdata/ai-yue-gp:/data \
   -e YUEGP_PROFILE=3 \
   -e YUEGP_ICL_MODE=1 \
-  -e YUEGP_TRANSFORMER_PATCH=1 \
+  -e YUEGP_TRANSFORMER_PATCH=0 \
   --network host \
   olilanz/ai-yue-gp
 ```

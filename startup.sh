@@ -12,7 +12,7 @@ export TORCH_HOME="${CACHE_HOME}/torch"
 echo "🔧 Starting YuEGP container startup script..."
 
 echo "📂 Setting up cache directories..."
-mkdir -p "${CACHE_HOME}" "${HF_HOME}" "${TORCH_HOME}" /data/input /data/output
+mkdir -p "${CACHE_HOME}" "${HF_HOME}" "${TORCH_HOME}" /data/output
 
 # Clone or update YuEGP
 YUEGP_HOME="${CACHE_HOME}/YuEGP"
@@ -63,8 +63,9 @@ pip install --no-cache-dir --root-user-action=ignore flash-attn --no-build-isola
 # Set up arguments
 YUEGP_PROFILE=${YUEGP_PROFILE:-1}
 YUEGP_CUDA_IDX=${YUEGP_CUDA_IDX:-0}
-YUEGP_ICL_MODE=${YUEGP_ICL_MODE:-0}
+YUEGP_ENABLE_ICL=${YUEGP_ENABLE_ICL:-1}
 YUEGP_TRANSFORMER_PATCH=${YUEGP_TRANSFORMER_PATCH:-0}
+YUEGP_STAGE_2_BATCH_SIZE=${YUEGP_STAGE_2_BATCH_SIZE:-2}
 
 # Applying transformer patch as per YuEGP documentation
 if [[ "$YUEGP_TRANSFORMER_PATCH" == "1" ]]; then
@@ -79,17 +80,13 @@ echo "🚀 Starting YuEGP service..."
 YUEGP_ARGS=" \
     --profile ${YUEGP_PROFILE} \
     --cuda_idx ${YUEGP_CUDA_IDX} \
-    --genre_txt /data/input/genre.txt \
-    --lyrics_txt /data/input/lyrics.txt \
-    --output_dir /data/output"
+    --stage2_batch_size ${YUEGP_STAGE_2_BATCH_SIZE} \
+    --output_dir /data/output" \
+    --keep_intermediate
 
-if [[ "$YUEGP_ICL_MODE" == "1" ]]; then
+if [[ "$YUEGP_ENABLE_ICL" == "1" ]]; then
+    echo "🔨 Enabling audio prompt..."
     YUEGP_ARGS="$YUEGP_ARGS --icl"
-elif [[ "$YUEGP_ICL_MODE" == "2" ]]; then
-    YUEGP_ARGS="$YUEGP_ARGS --icl --use_dual_tracks_prompt"
-elif [[ "$YUEGP_ICL_MODE" != "0" ]]; then
-    echo "❌ Invalid mode: ${YUEGP_ICL_MODE}. Please use 0, 1, or 2."
-    exit 1
 fi
 
 cd "$INFERENCE_HOME" || exit 1
@@ -98,9 +95,6 @@ echo "❌ The YuEGP service has terminated."
 
 #python3 infer.py \
 #    --cuda_idx 0 \
-#    --genre_txt /data/input/genre.txt \
-#    --lyrics_txt /data/input/lyrics.txt \
-#    --run_n_segments 2 \
 #    --stage2_batch_size 4 \
 #    --output_dir /data/output \
 #    --max_new_tokens 3000 \
