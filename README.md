@@ -60,7 +60,7 @@ docker run -it --rm --name ai-yue-gp \
   -p 7860:7860 \
   -v /mnt/cache/appdata/ai-yue-gp:/workspace \
   -e YUEGP_PROFILE=3 \
-  -e YUEGP_ICL_MODE=1 \
+  -e YUEGP_ENABLE_ICL=0 \
   -e YUEGP_TRANSFORMER_PATCH=0 \
   -e YUEGP_AUTO_UPDATE=1 \
   --network host \

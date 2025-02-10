@@ -7,7 +7,7 @@ echo "🔧 Starting YuEGP container startup script..."
 # Set up arguments
 YUEGP_PROFILE=${YUEGP_PROFILE:-1}
 YUEGP_CUDA_IDX=${YUEGP_CUDA_IDX:-0}
-YUEGP_ENABLE_ICL=${YUEGP_ENABLE_ICL:-1}
+YUEGP_ENABLE_ICL=${YUEGP_ENABLE_ICL:-0}
 YUEGP_TRANSFORMER_PATCH=${YUEGP_TRANSFORMER_PATCH:-0}
 YUEGP_AUTO_UPDATE=${YUEGP_AUTO_UPDATE:-0}
 
@@ -75,7 +75,6 @@ if [[ "$YUEGP_TRANSFORMER_PATCH" == "1" ]]; then
 fi
 
 # Build command line argds and start the service
-echo "🚀 Starting YuEGP service..."
 YUEGP_ARGS=" \
     --profile ${YUEGP_PROFILE} \
     --cuda_idx ${YUEGP_CUDA_IDX} \
@@ -87,6 +86,7 @@ if [[ "$YUEGP_ENABLE_ICL" == "1" ]]; then
     YUEGP_ARGS="$YUEGP_ARGS --icl"
 fi
 
+echo "🚀 Starting YuEGP service..."
 cd "$INFERENCE_HOME" || exit 1
 python3 gradio_server.py ${YUEGP_ARGS}
 echo "❌ The YuEGP service has terminated."
