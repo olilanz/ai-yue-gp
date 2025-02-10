@@ -27,13 +27,12 @@ YUEGP_HOME="${CACHE_HOME}/YuEGP"
 if [ ! -d "$YUEGP_HOME" ]; then
     echo "📥 Upacking YuEGP repository..."
     mkdir -p "$YUEGP_HOME"
-    tar -xzf YuEGP.tar.gz --strip-components=1 -C "$YUEGP_HOME"
+    tar -xzvf YuEGP.tar.gz --strip-components=1 -C "$YUEGP_HOME"
 fi
 if [[ "$YUEGP_AUTO_UPDATE" == "1" ]]; then
     echo "🔄 Updating the YuEGP repository..."
-    cd "$YUEGP_HOME" || exit 1
-    git reset --hard
-    git pull origin main
+    git -C "$YUEGP_HOME" reset --hard
+    git -C "$YUEGP_HOME" pull origin main
 fi
 
 # Clone or update xcodec_mini_infer
@@ -41,13 +40,12 @@ XCODEC_HOME="${CACHE_HOME}/xcodec_mini_infer"
 if [ ! -d "$XCODEC_HOME" ]; then
     echo "📥 Upacking the xcodec_mini_infer repository..."
     mkdir -p "$XCODEC_HOME"
-    tar -xzf xcodec_mini_infer.tar.gz --strip-components=1 -C "$XCODEC_HOME"
+    tar -xzvf xcodec_mini_infer.tar.gz --strip-components=1 -C "$XCODEC_HOME"
 fi
 if [[ "$YUEGP_AUTO_UPDATE" == "1" ]]; then
     echo "🔄 Updating xcodec_mini_infer repository..."
-    cd "$XCODEC_HOME" || exit 1
-    git reset --hard
-    git pull origin main
+    git -C "$XCODEC_HOME" reset --hard
+    git -C "$XCODEC_HOME" pull origin main
 fi
 
 # Link xcodec_mini_infer
