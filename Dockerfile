@@ -18,6 +18,18 @@ RUN apt update && apt install -y \
     git lfs install && \
     rm -rf /var/lib/apt/lists/*
 
+# Package the startup script and the latest version of the YueGP repositories
+WORKDIR /app
+COPY startup.sh startup.sh
+
+RUN git clone --single-branch --depth=1 https://github.com/olilanz/deepbeepmeep-YuEGP.git YuEGP && \
+    tar -czf YuEGP.tar.gz YuEGP && \
+    rm -rf YuEGP
+
+RUN git clone --single-branch --depth=1 https://huggingface.co/m-a-p/xcodec_mini_infer.git xcodec_mini_infer && \
+    tar -czf xcodec_mini_infer.tar.gz xcodec_mini_infer && \
+    rm -rf xcodec_mini_infer
+
 # Expose the required port (make sure it's used in the startup script)
 EXPOSE 7860
 
@@ -26,8 +38,7 @@ ENV YUEGP_PROFILE=1
 ENV YUEGP_CUDA_IDX=0
 ENV YUEGP_ENABLE_ICL=1
 ENV YUEGP_TRANSFORMER_PATCH=0
+ENV YUEGP_AUTO_UPDATE=0
 
 # Default command to run the container
-WORKDIR /app
-COPY startup.sh startup.sh
 CMD ["bash", "./startup.sh"]

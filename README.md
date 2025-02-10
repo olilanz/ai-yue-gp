@@ -30,6 +30,10 @@ YUEGP_TRANSFORMER_PATCH: Patch the transformers for additional speed on lower VR
  - 0: Run with the original transformers, without deepmeepbeep's optimizations.
  - 1: Apply the patches - may give unintended side effects in certain configurations.
 
+YUEGP_AUTO_UPDATE: Automatically updates the inference scripts to the latest verion upon container start-up.
+ - 0: Don't update automatically. Use the scripts that are bundled (default).
+ - 1: Update and use the latest features / models. But also accept that this may being breaking changes.
+
 More documentation on the effect of these parameters can be found in the [originator's repo](https://github.com/deepbeepmeep/YuEGP.git).
 
 ### Fixing caching issues

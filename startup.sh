@@ -2,6 +2,16 @@
 
 set -euo pipefail  # Exit on error, show commands, handle pipes safely
 
+echo "🔧 Starting YuEGP container startup script..."
+
+# Set up arguments
+YUEGP_PROFILE=${YUEGP_PROFILE:-1}
+YUEGP_CUDA_IDX=${YUEGP_CUDA_IDX:-0}
+YUEGP_ENABLE_ICL=${YUEGP_ENABLE_ICL:-1}
+YUEGP_TRANSFORMER_PATCH=${YUEGP_TRANSFORMER_PATCH:-0}
+YUEGP_AUTO_UPDATE=${YUEGP_AUTO_UPDATE:-0}
+
+# Set up environment variables
 export SERVER_PORT=7860
 export SERVER_NAME=0.0.0.0
 
@@ -9,22 +19,18 @@ CACHE_HOME="/workspace/cache"
 export HF_HOME="${CACHE_HOME}/huggingface"
 export TORCH_HOME="${CACHE_HOME}/torch"
 
-echo "🔧 Starting YuEGP container startup script..."
-
 echo "📂 Setting up cache directories..."
 mkdir -p "${CACHE_HOME}" "${HF_HOME}" "${TORCH_HOME}" /workspace/output
 
 # Clone or update YuEGP
-#YUEGP_HOME="${CACHE_HOME}/YuEGP"
-#YUEGP_REPO_URL="https://github.com/deepbeepmeep/YuEGP.git"
-YUEGP_HOME="${CACHE_HOME}/YuEGP-olilanz"
-YUEGP_REPO_URL="https://github.com/olilanz/deepbeepmeep-YuEGP.git"
-
+YUEGP_HOME="${CACHE_HOME}/YuEGP"
 if [ ! -d "$YUEGP_HOME" ]; then
-    echo "📥 Cloning YuEGP repository..."
-    git clone --depth 1 "$YUEGP_REPO_URL" "$YUEGP_HOME"
-else
-    echo "🔄 Updating YuEGP repository..."
+    echo "📥 Upacking YuEGP repository..."
+    mkdir -p "$YUEGP_HOME"
+    tar -xzf YuEGP.tar.gz --strip-components=1 -C "$YUEGP_HOME"
+fi
+if [[ "$YUEGP_AUTO_UPDATE" == "1" ]]; then
+    echo "🔄 Updating the YuEGP repository..."
     cd "$YUEGP_HOME" || exit 1
     git reset --hard
     git pull origin main
@@ -32,12 +38,12 @@ fi
 
 # Clone or update xcodec_mini_infer
 XCODEC_HOME="${CACHE_HOME}/xcodec_mini_infer"
-XCODEC_REPO_URL="https://huggingface.co/m-a-p/xcodec_mini_infer.git"
-
 if [ ! -d "$XCODEC_HOME" ]; then
-    echo "📥 Cloning xcodec_mini_infer repository..."
-    git clone --depth 1 "$XCODEC_REPO_URL" "$XCODEC_HOME"
-else
+    echo "📥 Upacking the xcodec_mini_infer repository..."
+    mkdir -p "$XCODEC_HOME"
+    tar -xzf xcodec_mini_infer.tar.gz --strip-components=1 -C "$XCODEC_HOME"
+fi
+if [[ "$YUEGP_AUTO_UPDATE" == "1" ]]; then
     echo "🔄 Updating xcodec_mini_infer repository..."
     cd "$XCODEC_HOME" || exit 1
     git reset --hard
@@ -61,12 +67,6 @@ pip install torch==2.5.1 torchvision torchaudio --index-url https://download.pyt
 pip install --no-cache-dir --root-user-action=ignore -r "$YUEGP_HOME/requirements.txt"
 pip install --no-cache-dir wheel
 pip install --no-cache-dir --root-user-action=ignore flash-attn --no-build-isolation
-
-# Set up arguments
-YUEGP_PROFILE=${YUEGP_PROFILE:-1}
-YUEGP_CUDA_IDX=${YUEGP_CUDA_IDX:-0}
-YUEGP_ENABLE_ICL=${YUEGP_ENABLE_ICL:-1}
-YUEGP_TRANSFORMER_PATCH=${YUEGP_TRANSFORMER_PATCH:-0}
 
 # Applying transformer patch as per YuEGP documentation
 if [[ "$YUEGP_TRANSFORMER_PATCH" == "1" ]]; then
