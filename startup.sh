@@ -15,8 +15,9 @@ echo "📂 Setting up cache directories..."
 mkdir -p "${CACHE_HOME}" "${HF_HOME}" "${TORCH_HOME}" /workspace/output
 
 # Clone or update YuEGP
-YUEGP_HOME="${CACHE_HOME}/YuEGP"
+#YUEGP_HOME="${CACHE_HOME}/YuEGP"
 #YUEGP_REPO_URL="https://github.com/deepbeepmeep/YuEGP.git"
+YUEGP_HOME="${CACHE_HOME}/YuEGP-olilanz"
 YUEGP_REPO_URL="https://github.com/olilanz/deepbeepmeep-YuEGP.git"
 
 if [ ! -d "$YUEGP_HOME" ]; then
