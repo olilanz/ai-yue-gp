@@ -5,14 +5,14 @@ set -euo pipefail  # Exit on error, show commands, handle pipes safely
 export SERVER_PORT=7860
 export SERVER_NAME=0.0.0.0
 
-CACHE_HOME="/data/cache"
+CACHE_HOME="/workspace/cache"
 export HF_HOME="${CACHE_HOME}/huggingface"
 export TORCH_HOME="${CACHE_HOME}/torch"
 
 echo "🔧 Starting YuEGP container startup script..."
 
 echo "📂 Setting up cache directories..."
-mkdir -p "${CACHE_HOME}" "${HF_HOME}" "${TORCH_HOME}" /data/output
+mkdir -p "${CACHE_HOME}" "${HF_HOME}" "${TORCH_HOME}" /workspace/output
 
 # Clone or update YuEGP
 YUEGP_HOME="${CACHE_HOME}/YuEGP"
@@ -80,7 +80,7 @@ echo "🚀 Starting YuEGP service..."
 YUEGP_ARGS=" \
     --profile ${YUEGP_PROFILE} \
     --cuda_idx ${YUEGP_CUDA_IDX} \
-    --output_dir /data/output \
+    --output_dir /workspace/output \
     --keep_intermediate"
 
 if [[ "$YUEGP_ENABLE_ICL" == "1" ]]; then
@@ -95,7 +95,7 @@ echo "❌ The YuEGP service has terminated."
 #python3 infer.py \
 #    --cuda_idx 0 \
 #    --stage2_batch_size 4 \
-#    --output_dir /data/output \
+#    --output_dir /workspace/output \
 #    --max_new_tokens 3000 \
 #    --seed 42
 #echo "✅ YuE inference completed successfully."

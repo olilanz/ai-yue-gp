@@ -10,7 +10,7 @@ The container is contains all dependencies, i.e. batteries included. Though, dur
 
 The container consumes considerable disk space for storage of the AI models. On my setup I observe 7GB for the docker image itsef, plus 27GB for cached data. Building the cache will happen the first time when you start the container. After that any restart should be faster.
 
-It may be advisable to store the cache outside of the conatiner, e.g. by mounting a volume to /data.
+It may be advisable to store the cache outside of the conatiner, e.g. by mounting a volume to /workspace.
 
 ## Variables
 
@@ -54,7 +54,7 @@ On my setup I am using the following parameters:
 docker run -it --rm --name ai-yue-gp \
   --shm-size 24g --gpus all \
   -p 7860:7860 \
-  -v /mnt/cache/appdata/ai-yue-gp:/data \
+  -v /mnt/cache/appdata/ai-yue-gp:/workspace \
   -e YUEGP_PROFILE=3 \
   -e YUEGP_ICL_MODE=1 \
   -e YUEGP_TRANSFORMER_PATCH=0 \
