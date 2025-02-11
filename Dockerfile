@@ -24,7 +24,6 @@ RUN apt update && apt install -y \
 
 # Package the startup script and the latest version of the YueGP repositories
 WORKDIR /app
-COPY startup.sh startup.sh
 
 RUN git clone --single-branch --depth=1 https://github.com/olilanz/deepbeepmeep-YuEGP.git YuEGP && \
     tar -czf YuEGP.tar.gz YuEGP && \
@@ -33,6 +32,8 @@ RUN git clone --single-branch --depth=1 https://github.com/olilanz/deepbeepmeep-
 RUN git clone --single-branch --depth=1 https://huggingface.co/m-a-p/xcodec_mini_infer.git xcodec_mini_infer && \
     tar -czf xcodec_mini_infer.tar.gz xcodec_mini_infer && \
     rm -rf xcodec_mini_infer
+
+COPY startup.sh startup.sh
 
 # Expose the required port (make sure it's used in the startup script)
 EXPOSE 7860
