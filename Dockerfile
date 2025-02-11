@@ -10,6 +10,10 @@ ENV CUDA_HOME=/usr/local/cuda
 ENV PATH="$CUDA_HOME/bin:$PATH"
 ENV LD_LIBRARY_PATH="$CUDA_HOME/lib64:$LD_LIBRARY_PATH"
 
+# Ensure Python outputs everything that's printed inside the application
+# (solvws the issue of not seeing the output of the application in the container)
+ENV PYTHONUNBUFFERED=1
+
 # Install system dependencies in a single step to reduce layer size
 RUN apt update && apt install -y \
     git git-lfs \
