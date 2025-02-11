@@ -11,10 +11,6 @@ YUEGP_ENABLE_ICL=${YUEGP_ENABLE_ICL:-0}
 YUEGP_TRANSFORMER_PATCH=${YUEGP_TRANSFORMER_PATCH:-0}
 YUEGP_AUTO_UPDATE=${YUEGP_AUTO_UPDATE:-0}
 
-# Set up environment variables
-export SERVER_PORT=7860
-export SERVER_NAME=0.0.0.0
-
 CACHE_HOME="/workspace/cache"
 export HF_HOME="${CACHE_HOME}/huggingface"
 export TORCH_HOME="${CACHE_HOME}/torch"
@@ -79,7 +75,9 @@ YUEGP_ARGS=" \
     --profile ${YUEGP_PROFILE} \
     --cuda_idx ${YUEGP_CUDA_IDX} \
     --output_dir /workspace/output \
-    --keep_intermediate"
+    --keep_intermediate \
+    --server_name 0.0.0.0 \
+    --server_port 7860"
 
 if [[ "$YUEGP_ENABLE_ICL" == "1" ]]; then
     echo "🔨 Enabling audio prompt..."
