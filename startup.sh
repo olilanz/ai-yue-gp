@@ -10,6 +10,8 @@ YUEGP_CUDA_IDX=${YUEGP_CUDA_IDX:-0}
 YUEGP_ENABLE_ICL=${YUEGP_ENABLE_ICL:-0}
 YUEGP_TRANSFORMER_PATCH=${YUEGP_TRANSFORMER_PATCH:-0}
 YUEGP_AUTO_UPDATE=${YUEGP_AUTO_UPDATE:-0}
+YUEGP_SERVER_USER=${YUEGP_SERVER_USER:-""}
+YUEGP_SERVER_PASSWORD=${YUEGP_SERVER_PASSWORD:-""}
 
 CACHE_HOME="/workspace/cache"
 export HF_HOME="${CACHE_HOME}/huggingface"
@@ -77,7 +79,9 @@ YUEGP_ARGS=" \
     --output_dir /workspace/output \
     --keep_intermediate \
     --server_name 0.0.0.0 \
-    --server_port 7860"
+    --server_port 7860 \
+    --server_user \"${YUEGP_SERVER_USER}\"  \
+    --server_password \"${YUEGP_SERVER_PASSWORD}\""
 
 if [[ "$YUEGP_ENABLE_ICL" == "1" ]]; then
     echo "🔨 Enabling audio prompt..."
@@ -89,11 +93,3 @@ echo "🚀 Starting YuEGP service..."
 cd "$INFERENCE_HOME" || exit 1
 python3 -y gradio_server.py ${YUEGP_ARGS} 2>&1 | tee "${CACHE_HOME}/output.log"
 echo "❌ The YuEGP service has terminated."
-
-#python3 infer.py \
-#    --cuda_idx 0 \
-#    --stage2_batch_size 4 \
-#    --output_dir /workspace/output \
-#    --max_new_tokens 3000 \
-#    --seed 42
-#echo "✅ YuE inference completed successfully."
