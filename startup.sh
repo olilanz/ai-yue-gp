@@ -30,7 +30,7 @@ fi
 if [[ "$YUEGP_AUTO_UPDATE" == "1" ]]; then
     echo "🔄 Updating the YuEGP repository..."
     git -C "$YUEGP_HOME" reset --hard
-    git -C "$YUEGP_HOME" pull origin main
+    git -C "$YUEGP_HOME" pull
 fi
 
 # Clone or update xcodec_mini_infer
@@ -43,7 +43,7 @@ fi
 if [[ "$YUEGP_AUTO_UPDATE" == "1" ]]; then
     echo "🔄 Updating xcodec_mini_infer repository..."
     git -C "$XCODEC_HOME" reset --hard
-    git -C "$XCODEC_HOME" pull origin main
+    git -C "$XCODEC_HOME" pull
 fi
 
 # Link xcodec_mini_infer
