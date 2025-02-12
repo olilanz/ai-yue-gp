@@ -84,9 +84,10 @@ if [[ "$YUEGP_ENABLE_ICL" == "1" ]]; then
     YUEGP_ARGS="$YUEGP_ARGS --icl"
 fi
 
+# Ensuring that all output is flushed to the console, and that stderr is redirected to stdout and log
 echo "🚀 Starting YuEGP service..."
 cd "$INFERENCE_HOME" || exit 1
-python3 gradio_server.py ${YUEGP_ARGS}
+python3 -y gradio_server.py ${YUEGP_ARGS} 2>&1 | tee "${CACHE_HOME}/output.log"
 echo "❌ The YuEGP service has terminated."
 
 #python3 infer.py \
