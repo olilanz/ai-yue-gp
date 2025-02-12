@@ -79,9 +79,9 @@ YUEGP_ARGS=" \
     --output_dir /workspace/output \
     --keep_intermediate \
     --server_name 0.0.0.0 \
-    --server_port 7860 \
-    --server_user \"${YUEGP_SERVER_USER}\"  \
-    --server_password \"${YUEGP_SERVER_PASSWORD}\""
+    --server_port 7860"
+#    --server_user \"${YUEGP_SERVER_USER}\"  \
+#    --server_password \"${YUEGP_SERVER_PASSWORD}\""
 
 if [[ "$YUEGP_ENABLE_ICL" == "1" ]]; then
     echo "🔨 Enabling audio prompt..."
