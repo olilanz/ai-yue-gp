@@ -14,10 +14,14 @@ ENV LD_LIBRARY_PATH="$CUDA_HOME/lib64:$LD_LIBRARY_PATH"
 # (solvws the issue of not seeing the output of the application in the container)
 ENV PYTHONUNBUFFERED=1
 
+# Dynamic memory allocation for PyTorch in order to reduce memory fragmentation.
+# (reduces risk of OOM eerors in low VRAM scenarios)
+ENV PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True"
+
 # Install system dependencies in a single step to reduce layer size
 RUN apt update && apt install -y \
     git git-lfs \
-    python3.10 python3-pip python3.10-venv && \
+    python3.11 python3-pip python3.10-venv && \
     python3 -m pip install --upgrade pip && \
     git lfs install && \
     rm -rf /var/lib/apt/lists/*
@@ -25,7 +29,7 @@ RUN apt update && apt install -y \
 # Package the startup script and the latest version of the YueGP repositories
 WORKDIR /app
 
-RUN git clone --single-branch --depth=1 https://github.com/olilanz/deepbeepmeep-YuEGP.git YuEGP && \
+RUN git clone --single-branch --depth=1 https://github.com/deepbeepmeep/YuEGP.git YuEGP && \
     tar -czf YuEGP.tar.gz YuEGP && \
     rm -rf YuEGP
 
