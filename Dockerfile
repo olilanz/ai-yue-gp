@@ -21,7 +21,7 @@ ENV PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True"
 # Install system dependencies in a single step to reduce layer size
 RUN apt update && apt install -y \
     git git-lfs \
-    python3.11 python3-pip python3.10-venv && \
+    python3.10 python3-pip python3.10-venv && \
     python3 -m pip install --upgrade pip && \
     git lfs install && \
     rm -rf /var/lib/apt/lists/*
