@@ -23,7 +23,7 @@ mkdir -p "${CACHE_HOME}" "${HF_HOME}" "${TORCH_HOME}" /workspace/output
 # Clone or update YuEGP
 YUEGP_HOME="${CACHE_HOME}/YuEGP"
 if [ ! -d "$YUEGP_HOME" ]; then
-    echo "📥 Upacking YuEGP repository..."
+    echo "📥 Unnpacking YuEGP repository..."
     mkdir -p "$YUEGP_HOME"
     tar -xzvf YuEGP.tar.gz --strip-components=1 -C "$YUEGP_HOME"
 fi
@@ -36,7 +36,7 @@ fi
 # Clone or update xcodec_mini_infer
 XCODEC_HOME="${CACHE_HOME}/xcodec_mini_infer"
 if [ ! -d "$XCODEC_HOME" ]; then
-    echo "📥 Upacking the xcodec_mini_infer repository..."
+    echo "📥 Unpacking the xcodec_mini_infer repository..."
     mkdir -p "$XCODEC_HOME"
     tar -xzvf xcodec_mini_infer.tar.gz --strip-components=1 -C "$XCODEC_HOME"
 fi
@@ -80,8 +80,6 @@ YUEGP_ARGS=" \
     --keep_intermediate \
     --server_name 0.0.0.0 \
     --server_port 7860"
-#    --server_user \"${YUEGP_SERVER_USER}\"  \
-#    --server_password \"${YUEGP_SERVER_PASSWORD}\""
 
 if [[ "$YUEGP_ENABLE_ICL" == "1" ]]; then
     echo "🔨 Enabling audio prompt..."
