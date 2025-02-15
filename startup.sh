@@ -54,10 +54,15 @@ ln -sfn "${XCODEC_HOME}" "${INFERENCE_HOME}/xcodec_mini_infer"
 VENV_HOME="${CACHE_HOME}/venv"
 echo "📦 Installing dependencies..."
 if [ ! -d "$VENV_HOME" ]; then
-    python3 -m venv "$VENV_HOME"
+    # Create virtual environment, but re-use globally installed packages if available (e.g. via base container)
+    python3 -m venv "$VENV_HOME" --system-site-packages
 fi
-
 source "${VENV_HOME}/bin/activate"
+
+# Ensure latest pip version
+pip install --no-cache-dir --upgrade pip wheel
+
+# Install required dependencies
 pip install --no-cache-dir --upgrade pip
 pip install torch==2.5.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/test/cu124
 pip install --no-cache-dir --root-user-action=ignore -r "$YUEGP_HOME/requirements.txt"

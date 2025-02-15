@@ -1,14 +1,14 @@
 # YuE AI Song Composer for the GPU Poor (YuEGP)
 
-Containerised version of the YuEGP music generator. It is based on the YuE project, with deepmeepbeep's optimizations for the GPU-poor. It lets you run a quantized version of the full model on your smaller GPU, e.g. with 12GM of VRAM or even less.
+Containerised version of the YuEGP music generator. It is based on the YuE project, with deepmeepbeep's optimizations for the GPU-poor. It lets you run a quantized version of the full model on your smaller GPU, e.g. with 12GB of VRAM or even less.
 
-Currently, only NVIDIA CPU's are supported, as the code releis on CUDA for the processing. 
+Currently, only NVIDIA CPU's are supported, as the code relies on CUDA for the processing. 
 
-The container is contains all dependencies, i.e. batteries included. Though, during start-up it will acquire the latest model and code from [deepmeepbeep's repo](https://github.com/deepbeepmeep/YuEGP.git) and the latest mini-inference model from [Huggingface](https://huggingface.co/m-a-p/xcodec_mini_infer.git). 
+The container is contains all dependencies, i.e. batteries included. Though, during start-up it will acquire the latest model and code from [deepmeepbeep's repo](https://github.com/deepbeepmeep/YuEGP) and the latest xcodec-mini-inference model from [Huggingface](https://huggingface.co/m-a-p/xcodec_mini_infer). 
 
 ## Disk size and startup time
 
-The container consumes considerable disk space for storage of the AI models. On my setup I observe 7GB for the docker image itsef, plus 27GB for cached data. Building the cache will happen the first time when you start the container. After that any restart should be faster.
+The container consumes considerable disk space for storage of the AI models. On my setup I observe 7GB for the docker image itself, plus 27GB for cached data. Building the cache will happen the first time when you start the container. That can easily take 20 minutes or more. After that any restart should be faster.
 
 It may be advisable to store the cache outside of the conatiner, e.g. by mounting a volume to /workspace.
 
@@ -34,11 +34,11 @@ YUEGP_AUTO_UPDATE: Automatically updates the models and inference scripts to the
  - 0: Don't update automatically. Use the scripts that are bundled.
  - 1: Update and use the latest features / models. But also accept that this may being breaking changes.
 
-More documentation on the effect of these parameters can be found in the [originator's repo](https://github.com/deepbeepmeep/YuEGP.git).
+More documentation on the effect of these parameters can be found in the [originator's repo](https://github.com/deepbeepmeep/YuEGP).
 
 ### Fixing caching issues
 
-As the container updates the models to the latest available version, there is no guarantee that the cached files from previous start-ups are compatible with updated versions. I haven't encountered any issue yet. Though, should you run into issues, just removing the cache folder will caus the startup script to rebuild it from scratch, and thereby fix issues caused by version specific incompatibilities.
+As the container updates the models to the latest available version, there is no guarantee that the cached files from previous start-ups are compatible with updated versions. I haven't encountered any issue yet. Though, should you run into issues, just removing the cache folder will cause the startup script to rebuild the cache from scratch, and thereby fix any inconsistencies.
 
 ## Command reference
 
@@ -72,10 +72,11 @@ Note that you need to have an NVIDIA GPU installed, including all dependencies f
 
 I am running on a computer with an AMD Ryzen 7 3700X, 128GB Ram, an RTX 3060 with 12GB VRAM. CPU and Ram are plentiful. The GPU is the bottleneck. It runs stable in that configuration. Though, for a song with 6 sections, the inference takes about 90 minutes to complete - resulting in a song of over 2 mins length.
 
-Deepmeepbeep mentions in his documentation that with an RTX4090, he can generate a similar song using profile 1 in just about 4 minutes. So, a good GPU works wonders :-D
+Deepmeepbeep mentions in his documentation that with an RTX4090, he can generate a similar song using profile 1 in just about 4 minutes. So, a good GPU should work wonders :-D
 
 ## Resources
 * For the GPU-Poor: https://github.com/deepbeepmeep/YuEGP
+* For the non-GPU-Poor: https://github.com/multimodal-art-projection/YuE
 
 ## Alternative
 
