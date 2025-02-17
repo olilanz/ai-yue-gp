@@ -1,5 +1,6 @@
 # Use the development container, which includes necessary CUDA libraries and the CUDA Compiler.
 FROM nvidia/cuda:12.4.1-devel-ubuntu22.04
+# could this be a better base image? pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime
 
 # Set system variables
 ENV DEBIAN_FRONTEND=noninteractive
