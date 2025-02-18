@@ -17,7 +17,7 @@ ENV PYTHONUNBUFFERED=1
 
 # Dynamic memory allocation for PyTorch in order to reduce memory fragmentation.
 # (reduces risk of OOM eerors in low VRAM scenarios)
-ENV PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True"
+ENV PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
 # Install system dependencies in a single step to reduce layer size
 RUN apt update && apt install -y \

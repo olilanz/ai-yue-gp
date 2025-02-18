@@ -63,7 +63,6 @@ docker run -it --rm --name ai-yue-gp \
   -e YUEGP_ENABLE_ICL=0 \
   -e YUEGP_TRANSFORMER_PATCH=0 \
   -e YUEGP_AUTO_UPDATE=1 \
-  --network host \
   olilanz/ai-yue-gp
 ```
 Note that you need to have an NVIDIA GPU installed, including all dependencies for Docker.
